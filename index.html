@@ -19,43 +19,34 @@
 				return;
 			}
 		
-			//console.log(beats);
 			this.diff = this.beats.array_average_diff();
-		
-			console.log('average', this.diff);
-		
-			//clearInterval(this.intervalId);
-			//this.intervalId = setInterval(function(that){ return function(){ that.show();} }(this), this.diff);
-			if(this.beats.length == 2)
+
+			if(this.beats.length == 2){
 				clearTimeout(this.tid);
 				this.tid = setTimeout(function(that){ return function(){ that.show();} }(this), this.diff);
+			}
 		
 			// calculate the BPM
 			this.bpm = 60000 / this.diff;
 		
 			// update number
-			s = document.getElementById('number');
-			s.innerHTML = this.bpm.toFixed();		
+			document.getElementById('number').innerHTML = this.bpm.toFixed();		
 		},
 		clear: function() {
 			this.beats = [];
-			s = document.getElementById('number');
-			s.innerHTML = '0.0';
-			z = document.getElementById('heart');
-			z.style.display = 'none';
+			document.getElementById('number').innerHTML = '0.0';
+			document.getElementById('heart').style.display = 'none';
 			this.diff = 0;
 		},
 		show: function(){			
-			z = document.getElementById('heart');
-			z.style.display = 'block';
+			document.getElementById('heart').style.display = 'block';
 			setTimeout(function(){
-				z = document.getElementById('heart');
-				z.style.display = 'none';
-			}, this.diff/3);
-			
-			if(this.diff != 0)
+				document.getElementById('heart').style.display = 'none';
+			}, this.diff/3);			
+			if(this.diff != 0){
 				clearTimeout(this.tid);
 				this.tid = setTimeout( function(that){ return function(){ that.show();} }(this), this.diff);
+			}
 		}
 	};
 	
