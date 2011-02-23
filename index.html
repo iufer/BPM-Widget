@@ -1,0 +1,81 @@
+<script type="text/javascript" charset="utf-8">
+	
+	
+	var Beat = {
+		beats: [],
+		bpm: 0,
+		diff: 0,
+		tid: false,
+		beat: function() {
+			var d;
+		
+			d = new Date();
+			this.beats.unshift( d.getTime() );
+			
+			if(this.beats.length > 4) this.beats.pop();	// keep it short
+			if(this.beats.length < 2) return; // start at two
+			if(this.beats[0] - this.beats[1] > 2000) { // clear after long delay
+				this.beats = [this.beats[0]];
+				return;
+			}
+		
+			//console.log(beats);
+			this.diff = this.beats.array_average_diff();
+		
+			console.log('average', this.diff);
+		
+			//clearInterval(this.intervalId);
+			//this.intervalId = setInterval(function(that){ return function(){ that.show();} }(this), this.diff);
+			if(this.beats.length == 2)
+				clearTimeout(this.tid);
+				this.tid = setTimeout(function(that){ return function(){ that.show();} }(this), this.diff);
+		
+			// calculate the BPM
+			this.bpm = 60000 / this.diff;
+		
+			// update number
+			s = document.getElementById('number');
+			s.innerHTML = this.bpm.toFixed();		
+		},
+		clear: function() {
+			this.beats = [];
+			s = document.getElementById('number');
+			s.innerHTML = '0.0';
+			z = document.getElementById('heart');
+			z.style.display = 'none';
+			this.diff = 0;
+		},
+		show: function(){			
+			z = document.getElementById('heart');
+			z.style.display = 'block';
+			setTimeout(function(){
+				z = document.getElementById('heart');
+				z.style.display = 'none';
+			}, this.diff/3);
+			
+			if(this.diff != 0)
+				clearTimeout(this.tid);
+				this.tid = setTimeout( function(that){ return function(){ that.show();} }(this), this.diff);
+		}
+	};
+	
+	Array.prototype.array_average_diff = function(){
+		// returns an average of the differences between
+		var a = 0;
+		for(var i=0; i < this.length; i++){
+			if(this[i+1]) { a += this[i] - this[i+1]; }
+		}
+		return a / (this.length - 1); //average it		
+	};
+	
+</script>
+
+<span id="number">0.0</span>
+<br>
+<button onclick="Beat.beat()">BEAT</button>
+<button onclick="Beat.clear()">clear</button>
+<br>
+<br>
+<div id="heart" style="display:none; width:16px; height:16px; background:url(heart.png) left top no-repeat;">
+	
+</div>
